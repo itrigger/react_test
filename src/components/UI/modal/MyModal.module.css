@@ -1,0 +1,27 @@
+.myModal{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    display: none;
+    background: rgba(0,0,0,.3);
+    padding: 10%;
+}
+
+.myModal.active{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.myModalContent{
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,.2);
+    padding: 25px;
+}
+
+.myModalBtnClose{
+    align-self: flex-end;
+}
