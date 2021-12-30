@@ -1,0 +1,17 @@
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar__items{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar__items a{
+    background: #cccccc;
+    padding: 5px 10px;
+    margin: 0 5px;
+}

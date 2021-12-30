@@ -18,3 +18,25 @@
     transform: translateX(-100%);
     transition: all 500ms ease-in;
 }
+
+.paginator{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.paginator .page{
+    margin: 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.paginator .page.active{
+    background: red;
+    color: #fff;
+    font-weight: bold;
+}
