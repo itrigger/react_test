@@ -15,7 +15,7 @@ const PostIdPage = () => {
         _embedded:{'wp:featuredmedia':[{media_details: {sizes:{thumbnail:{source_url:''}}}}]},
     })
     //const [comments, setComments] = useState([])
-    const [fetchPostById, isLoading, error] = useFetching(async (id) => {
+    const [fetchPostById, isLoading] = useFetching(async (id) => {
         const response = await PostService.getById(params.id)
         setPost(response.data)
         console.log(response.data)

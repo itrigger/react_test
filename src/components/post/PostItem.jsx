@@ -14,7 +14,7 @@ const PostItem = (props) => {
                     <div dangerouslySetInnerHTML={{__html: props.post.content.rendered}}></div>
                     <div>{props.post.acf.author}</div>
                     {props.post.featured_media > 0
-                        ? <img src={`${props.post._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url}`}/>
+                        ? <img src={`${props.post._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url}`} alt=""/>
                         : <></>
                     }
                 </div>

@@ -4,7 +4,7 @@
 ### АПИ отправки сообщения в ContactForm7
 
 ### `/wp-json/contact-form-7/v1/contact-forms/cf7_id/feedback` 
-https://medium.com/@mahesh_joshi/wordpress-contact-form-7-rest-api-endpoints-bf45907b571c
+#### https://medium.com/@mahesh_joshi/wordpress-contact-form-7-rest-api-endpoints-bf45907b571c
 
 Данные отправляем в формате таком
     
@@ -30,5 +30,15 @@ https://medium.com/@mahesh_joshi/wordpress-contact-form-7-rest-api-endpoints-bf4
     }
 
 
-https://www.npmjs.com/package/react-alert
-https://gist.github.com/Jekins/2bf2d0638163f1294637#CodeBlocks
+
+### Работа с Яндекс Картами
+#### https://react-yandex-maps.vercel.app/
+
+
+### Простой Алерт
+#### https://www.npmjs.com/package/react-alert
+
+
+### Руководство по разметке .md файлов
+#### https://gist.github.com/Jekins/2bf2d0638163f1294637#CodeBlocks
+

@@ -1,6 +1,5 @@
 import PostItem from "../post/PostItem";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
-import PostService from "../../API/PostService";
 
 const PostList = ({posts, remove}) => {
     if(!posts.length){
