@@ -5,13 +5,11 @@ import PostService from "../API/PostService";
 import {getPagesCount} from "../components/utlis/pages";
 import BtnPrimary from "../components/UI/button/BtnPrimary";
 import PostFilter from "../components/postfilter/PostFilter";
-import Counter from "../components/Counter";
 import Loader from "../components/UI/loader/Loader";
 import PostList from "../components/postlist/PostList";
 import Pagination from "../components/UI/pagination/Pagination";
 import MyModal from "../components/UI/modal/MyModal";
 import PostForm from "../components/postform/PostForm";
-import {observe} from "web-vitals/dist/modules/lib/observe";
 import {useObserver} from "../hook/useObserver";
 import MySelect from "../components/UI/select/MySelect";
 
@@ -27,7 +25,7 @@ const Posts = () => {
     const lastElement = useRef()
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-        const response = await PostService.getAll(limit, page)
+        const response = await PostService.getAllArticles()
         setPosts([...posts, ...response.data])
         const totalCount = response.headers['x-total-count']
         setTotalPages(getPagesCount(totalCount, limit))

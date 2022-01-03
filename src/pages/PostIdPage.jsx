@@ -6,36 +6,51 @@ import Loader from "../components/UI/loader/Loader";
 
 const PostIdPage = () => {
     const params = useParams()
-    const [post, setPost] = useState({})
-    const [comments, setComments] = useState([])
+    const [post, setPost] = useState({
+        id:0,
+        date:'',
+        title:{rendered:''},
+        acf:{author:''},
+        content:{rendered: ''},
+        _embedded:{'wp:featuredmedia':[{media_details: {sizes:{thumbnail:{source_url:''}}}}]},
+    })
+    //const [comments, setComments] = useState([])
     const [fetchPostById, isLoading, error] = useFetching(async (id) => {
         const response = await PostService.getById(params.id)
         setPost(response.data)
+        console.log(response.data)
     })
 
-    console.log(error)
 
-    const [fetchComments, isComLoading, comError] = useFetching(async (id) => {
+ /*   const [fetchComments, isComLoading, comError] = useFetching(async (id) => {
         const response = await PostService.getCommentsByPostId(params.id)
         setComments(response.data)
-    })
-
-    console.log(comError)
+    })*/
 
     useEffect(() => {
         fetchPostById(params.id)
-        fetchComments(params.id)
+       // fetchComments(params.id)
     }, [])
     return (
         <div>
-            <h1>Страница поста {params.id}</h1>
             {
                 isLoading
                     ? <Loader/>
-                    : <div>{post.id}. {post.title}</div>
+                    : <div>
+
+                        {post.id}. {post.date}
+                    <br/>
+                        { post.acf.author}
+                        { <div dangerouslySetInnerHTML={{__html: post.content.rendered}}></div>}
+                        {post._embedded ?
+                            <img src={`${post._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url}`}/>
+                            : <></>
+                        }
+
+                </div>
             }
 
-            <h2>Комменты</h2>
+          {/*  <h2>Комменты</h2>
             {
                 isComLoading
                     ? <Loader/>
@@ -47,7 +62,7 @@ const PostIdPage = () => {
                             </div>
                         )}
                     </div>
-            }
+            }*/}
 
 
         </div>

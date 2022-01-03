@@ -18,6 +18,7 @@ const Navbar = () => {
             <div className={cl.navbar__items}>
                 <Link to="/about">About</Link>
                 <Link to="/posts">Posts</Link>
+                <Link to="/contacts">Контакты</Link>
             </div>
         </div>
     );

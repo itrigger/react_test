@@ -10,8 +10,13 @@ const PostItem = (props) => {
         <div>
             <div className="post">
                 <div className="post__content">
-                    <h3>{props.post.id}. {props.post.title}</h3>
-                    <div>{props.post.body}</div>
+                    <h3>{props.post.id}. {props.post.title.rendered}</h3>
+                    <div dangerouslySetInnerHTML={{__html: props.post.content.rendered}}></div>
+                    <div>{props.post.acf.author}</div>
+                    {props.post.featured_media > 0
+                        ? <img src={`${props.post._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url}`}/>
+                        : <></>
+                    }
                 </div>
                 <div className="post__btns">
                     <BtnPrimary onClick={() => router.push(`/posts/${props.post.id}`)}>Открыть</BtnPrimary>
