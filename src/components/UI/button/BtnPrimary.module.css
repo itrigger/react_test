@@ -1,10 +1,25 @@
 .btnPrimary{
-    padding: 5px 15px;
     cursor: pointer;
-    background: aquamarine;
-    color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    padding: 8px 17px;
+    text-decoration: none;
+    border-radius: 3px;
+    font-family: Stem-Medium,sans-serif;
+    font-size: 16px;
+    word-break: keep-all;
+    transition: all .2s;
+    overflow: hidden;
+    position: relative;
+    color: #fff;
+    background: #0bbc93!important;
+    border: 2px solid #0bbc93;
 }
+
+.btnPrimary:hover{
+    background: #40cdad!important;
+    border-color: #40cdad;
+    transition: all .2s;
+}
+

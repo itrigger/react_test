@@ -3,7 +3,7 @@ import TwoCol from "../components/landing/TwoCol";
 import HowTo from "../components/landing/HowTo";
 import Process from "../components/landing/Process";
 import BlockAbout from "../components/landing/BlockAbout";
-import MyMap from "../components/landing/Map";
+import MyMap from "../components/yaMap/Map";
 
 const Home = () => {
     return (
@@ -13,6 +13,7 @@ const Home = () => {
             <Process/>
             <BlockAbout/>
             <MyMap />
+
         </div>
     );
 };
