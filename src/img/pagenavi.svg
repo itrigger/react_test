@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25.5px"
+	 height="17.7px" viewBox="0 0 25.5 17.7" enable-background="new 0 0 25.5 17.7" xml:space="preserve">
+<g id="Слой_5">
+	<g>
+		<defs>
+			<path id="SVGID_15725_" d="M-1851.2,340.7c0,0,288.3,99.1,800,99.1c520.3,0,800-99.1,800-99.1V-936.9h-1600V340.7z"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_15725_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_2_)">
+
+		</g>
+	</g>
+	<g opacity="5.000000e-002">
+		<defs>
+			<path id="SVGID_15730_" opacity="5.000000e-002" d="M-1851.2,3.9c0,0,288.3,99.1,800,99.1c520.3,0,800-99.1,800-99.1v389h-1600
+				V3.9z"/>
+		</defs>
+		<clipPath id="SVGID_4_">
+			<use xlink:href="#SVGID_15730_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_4_)">
+			<g>
+				<path fill="#231F20" stroke="#5d687a" stroke-miterlimit="10" d="M47.4,10.1l12.2,23.3L37.8,70.9c-2.7,4.6-7.6,7.2-12.6,7.2
+					c-2.5,0-5-0.6-7.3-2c-6.9-4.1-9.3-13-5.2-19.9L47.7-4c0,0,0-0.1,0.1-0.1C45.3,0.1,45,5.5,47.4,10.1z"/>
+				<path fill="#231F20" stroke="#5d687a" stroke-miterlimit="10" d="M-1,76.4c-2.1,1.1-4.4,1.7-6.7,1.7c-5.2,0-10.3-2.9-12.9-7.8
+					l-19.1-36.7l13.4-22.8c2.2-3.8,2.5-8.2,1.2-12L5.2,56.8C8.9,63.9,6.1,72.7-1,76.4z"/>
+			</g>
+		</g>
+	</g>
+	<g>
+		<g opacity="0.7">
+			<defs>
+				<path id="SVGID_15733_" opacity="0.7" d="M-1548.3,232.3c-126.4,4.5-232.5-94.4-236.9-220.8s94.4-232.5,220.8-236.9l1009.1-35.6
+					c126.4-4.5,232.5,94.4,236.9,220.8c4.5,126.4-94.4,232.5-220.8,236.9L-1548.3,232.3z"/>
+			</defs>
+			<clipPath id="SVGID_6_">
+				<use xlink:href="#SVGID_15733_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_6_)">
+			</g>
+		</g>
+	</g>
+	<g>
+		<polyline fill="#FFFFFF" stroke="#5d687a" stroke-width="2" stroke-miterlimit="10" points="15.9,0.7 24,8.8 15.9,17 		"/>
+		<line fill="#FFFFFF" stroke="#5d687a" stroke-width="2" stroke-miterlimit="10" x1="22.2" y1="8.8" x2="0" y2="8.8"/>
+	</g>
+</g>
+</svg>

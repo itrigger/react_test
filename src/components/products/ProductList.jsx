@@ -8,11 +8,11 @@ const ProductList = ({posts}) => {
         )
     }
     return (
-        <div>
+        <ul className="catalog--products-ul">
             {posts.map((item, index) =>
-                    <ProductsItem number={index+1} post={item} />
+                    <ProductsItem number={index+1} post={item} key={index} />
             )}
-        </div>
+        </ul>
     );
 };
 

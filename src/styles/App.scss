@@ -602,11 +602,12 @@ h1{
   align-items: center;
 }
 
-@import "utils/temp";
+@import "utils/paginator";
 @import "parts/header";
 @import "parts/slider";
 @import "parts/calculator";
 @import "parts/mainpage";
+@import "parts/catalog";
 @import "parts/footer";
 @import "parts/_media";
 

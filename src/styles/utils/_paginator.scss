@@ -1,0 +1,15 @@
+.paginator{
+  display: flex;
+  span{
+    cursor: pointer;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 5px;
+    font-size: 16px;
+    &.active{
+      background: #0bbc93;
+    }
+  }
+}

@@ -10,13 +10,13 @@ import {useObserver} from "../hook/useObserver";
 const Products = () => {
     const [posts, setPosts] = useState([])
     const [totalPages, setTotalPages] = useState(0)
-    const [limit, setLimit] = useState(10)
+    const [limit, setLimit] = useState(12)
     const [page, setPage] = useState(1)
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-        const response = await ProductService.getAllProducts()
-        console.log(response)
-        setPosts([...posts, ...response.data])
+        setPosts([])
+        const response = await ProductService.getAllProducts(page, limit)
+        setPosts(response.data)
         const totalCount = response.headers['x-wp-total']
         setTotalPages(getPagesCount(totalCount, limit))
     })
@@ -30,7 +30,7 @@ const Products = () => {
     }
 
     return (
-        <div>
+        <div className="in">
             <ProductList posts={posts}/>
 
             {isPostsLoading && <Loader/>}
