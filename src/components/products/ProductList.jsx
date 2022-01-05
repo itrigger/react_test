@@ -1,10 +1,11 @@
 import React from 'react';
 import ProductsItem from "./ProductsItem";
+import ProductSkeleton from "./ProductSkeleton";
 
 const ProductList = ({posts}) => {
     if(!posts.length){
         return (
-            <h3>Пусто</h3>
+            <ProductSkeleton />
         )
     }
     return (

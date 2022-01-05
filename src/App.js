@@ -7,6 +7,16 @@ import AlertTemplate from "react-alert-template-basic";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import {SendMsgOk} from "./context";
+import {
+    ApolloClient,
+    InMemoryCache,
+    ApolloProvider,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+    uri: 'https://testim.pw',
+    cache: new InMemoryCache()
+});
 
 function App() {
     const options = {
@@ -15,24 +25,27 @@ function App() {
         transition: transitions.SCALE,
     }
 
+
     const [sendMsgStatus, setSendMsgStatus] = useState(false)  //глобальное управление модальным окном
     const [activeMobMenu, setActiveMobMenu] = useState('')  //глобальное управление модальным окном мобильного меню
 
     return (
-        <SendMsgOk.Provider value={{
-            sendMsgStatus,
-            setSendMsgStatus,
-            activeMobMenu,
-            setActiveMobMenu
-        }}>
-            <Provider template={AlertTemplate} {...options}>
-                <Router>
-                    <Header/>
-                    <AppRouter/>
-                    <Footer/>
-                </Router>
-            </Provider>
-        </SendMsgOk.Provider>
+        <ApolloProvider client={client}>
+            <SendMsgOk.Provider value={{
+                sendMsgStatus,
+                setSendMsgStatus,
+                activeMobMenu,
+                setActiveMobMenu
+            }}>
+                <Provider template={AlertTemplate} {...options}>
+                    <Router>
+                        <Header/>
+                        <AppRouter/>
+                        <Footer/>
+                    </Router>
+                </Provider>
+            </SendMsgOk.Provider>
+        </ApolloProvider>
     )
 }
 

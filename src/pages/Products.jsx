@@ -5,17 +5,17 @@ import Loader from "../components/UI/loader/Loader";
 import Pagination from "../components/UI/pagination/Pagination";
 import ProductService from "../API/ProductService";
 import ProductList from "../components/products/ProductList";
-import {useObserver} from "../hook/useObserver";
 
 const Products = () => {
     const [posts, setPosts] = useState([])
     const [totalPages, setTotalPages] = useState(0)
-    const [limit, setLimit] = useState(12)
+    const [limit] = useState(12)
     const [page, setPage] = useState(1)
 
     const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
         setPosts([])
         const response = await ProductService.getAllProducts(page, limit)
+        console.log(response)
         setPosts(response.data)
         const totalCount = response.headers['x-wp-total']
         setTotalPages(getPagesCount(totalCount, limit))
@@ -26,6 +26,7 @@ const Products = () => {
     }, [page, limit])
 
     const changePage = (page) => {
+        window.scrollTo(0, 0)
         setPage(page)
     }
 

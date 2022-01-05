@@ -1,16 +1,36 @@
-.loader{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 1px dashed #000000;
-    animation: spin 1s infinite linear;
+.loadBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 6px;
+    background-color: #40cdad;
+    z-index: 9999;
 }
-
-@keyframes spin {
-    0%{
-        transform: rotate(0deg) scale(1);
-    }
-    100%{
-        transform: rotate(360deg) scale(1.4);
-    }
+.bar {
+    content: "";
+    display: inline;
+    position: absolute;
+    width: 0;
+    height: 100%;
+    left: 50%;
+    text-align: center;
+}
+.bar:nth-child(1) {
+    background-color: #00be95;
+    animation: loading 3s linear infinite;
+}
+.bar:nth-child(2) {
+    background-color: #40cdad;
+    animation: loading 3s linear 1s infinite;
+}
+.bar:nth-child(3) {
+    background-color: #556782;
+    animation: loading 3s linear 2s infinite;
+}
+@keyframes loading {
+    from {left: 0; width: 0;z-index:100;}
+    33.3333% {left: 0; width: 100%;z-index: 10;}
+    to {left: 0; width: 100%;}
 }
