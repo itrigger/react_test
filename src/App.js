@@ -3,7 +3,7 @@ import './styles/App.scss'
 import {BrowserRouter as Router} from "react-router-dom";
 import AppRouter from "./components/AppRouter";
 import {positions, Provider, transitions} from "react-alert";
-import AlertTemplate from "react-alert-template-basic";
+import AlertTemplate from "./components/UI/alert/react-alert-template-basic";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import {SendMsgOk} from "./context";
