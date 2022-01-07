@@ -5,13 +5,11 @@ import MyInput from "../UI/input/MyInput";
 import BtnPrimary from "../UI/button/BtnPrimary";
 import {SendMsgOk} from "../../context";
 
-const CallbackForm = () => {
+const CallbackForm = ({closeModal}) => {
     const [post, setPost] = useState({
         name: '',
         tel: ''
     })
-
-    const {sendMsgStatus, setSendMsgStatus} = useContext(SendMsgOk)
 
     const alert = useAlert();
 
@@ -27,12 +25,9 @@ const CallbackForm = () => {
         let response = await PostService.sendFormCF7(formData, 12)
         if(response.data.status === "mail_sent"){
             alert.success(response.data.message)
-            setSendMsgStatus(false)
-            console.log(sendMsgStatus)
+            closeModal()
         } else {
             alert.error(response.data.message)
-            setSendMsgStatus(true)
-            console.log(sendMsgStatus)
         }
     }
     return (

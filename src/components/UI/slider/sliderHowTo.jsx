@@ -5,8 +5,33 @@ import 'swiper/swiper.min.css'
 import img1 from "./../../../img/hts-10.png"
 import img2 from "./../../../img/hts-11.png"
 import img3 from "./../../../img/hts-12.png"
+import Modal from "react-modal";
+import SendMsgForm from "../../forms/SendMsgForm";
+import CallbackForm from "../../forms/CallbackForm";
+import BtnCloseModal from "../button/BtnCloseModal";
+
 
 const SliderHowTo = () => {
+
+    Modal.setAppElement("#root");
+
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [modal2IsOpen, set2IsOpen] = React.useState(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    function openModal2() {
+        set2IsOpen(true);
+    }
+    function closeModal2() {
+        set2IsOpen(false);
+    }
+
     return (
         <div className="cont2">
             <Swiper
@@ -48,7 +73,7 @@ const SliderHowTo = () => {
                             <div>
                                 <div className="title">Сформируйте продажу через форму обратной связи</div>
                                 <div className="btn-group">
-                                    <a className="btn btn-white sm" href="#">Продать</a>
+                                    <span className="btn btn-white sm" onClick={openModal}>Продать</span>
                                 </div>
                             </div>
                             <div className="pic"><img alt="" src={img1} /></div>
@@ -61,7 +86,7 @@ const SliderHowTo = () => {
                             <div>
                                 <div className="title">Либо закажите звонок и мы вам перезвоним</div>
                                 <div className="btn-group">
-                                    <a className="btn btn-white sm" href="#">Звонок</a>
+                                    <span className="btn btn-white sm" onClick={openModal2}>Звонок</span>
                                 </div>
                             </div>
                             <div className="pic"><img alt="" src={img3} /></div>
@@ -69,6 +94,26 @@ const SliderHowTo = () => {
                     </div>
                 </SwiperSlide>
             </Swiper>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                className="mymodal"
+                overlayClassName="myoverlay"
+            >
+                <BtnCloseModal onClick={closeModal} />
+                <SendMsgForm closeModal={closeModal}/>
+            </Modal>
+            <Modal
+                isOpen={modal2IsOpen}
+                onRequestClose={closeModal2}
+                contentLabel="Example Modal"
+                className="mymodal"
+                overlayClassName="myoverlay"
+            >
+                <BtnCloseModal onClick={closeModal2} />
+                <CallbackForm closeModal={closeModal2}/>
+            </Modal>
         </div>
     );
 };

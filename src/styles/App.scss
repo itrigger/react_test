@@ -15,6 +15,8 @@ html {
   color: #222;
   font-size: 1em;
   line-height: 1.4;
+  padding: 0;
+  margin: 0;
 }
 
 /*
@@ -269,9 +271,10 @@ textarea {
 
 
 body{
-  /*  background: url('../img/temp.jpg') center top no-repeat;*/
   font-family: $freg;
   font-size: 17px;
+  padding: 0;
+  margin: 0;
 }
 
 body *{
@@ -603,6 +606,7 @@ h1{
 }
 
 @import "utils/paginator";
+@import "utils/_modal";
 @import "parts/header";
 @import "parts/slider";
 @import "parts/calculator";

@@ -3,18 +3,27 @@ import Navbar from "../UI/navbar/Navbar";
 import {SendMsgOk} from "../../context";
 import MyModal from "../UI/modal/MyModal";
 import CallbackForm from "../forms/CallbackForm";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import Modal from 'react-modal';
+import BtnCloseModal from "../UI/button/BtnCloseModal";
 
 const Header = () => {
+    Modal.setAppElement("#root");
 
-    const {sendMsgStatus, setSendMsgStatus} = useContext(SendMsgOk)
     const {activeMobMenu, setActiveMobMenu} = useContext(SendMsgOk)
-
+    const [modalIsOpen, setIsOpen] = React.useState(false);
     const history = useHistory()
+
+    function openModal() {
+        setIsOpen(true);
+    }
+    function closeModal() {
+        setIsOpen(false);
+    }
+
 
     useEffect(() => {
         return history.listen((location) => {
-            console.log(`You changed the page to: ${location.pathname}`)
             setActiveMobMenu('')
         })
     },[history])
@@ -33,7 +42,7 @@ const Header = () => {
                     <div className="flex">
                         <div className="mobile burger">
                             <div className={`btn-burger ${activeMobMenu}`} onClick={clickBurger}>
-                                <span></span>
+                                <span />
                             </div>
                             <div id="mobile_menu" className={activeMobMenu}>
                                 <ul>
@@ -43,13 +52,13 @@ const Header = () => {
                                     <a href="tel:84956698860">8 495 669 88 60</a>
                                 </div>
                                 <div className="btn-group top-btn-group">
-                                    <span className="btn btn-primary" onClick={() => setSendMsgStatus(true)}>Узнать цену</span>
+                                    <span className="btn btn-primary" onClick={openModal}>Узнать цену</span>
                                 </div>
                             </div>
                         </div>
                         <div className="flex flex-pull-left">
-                            <div className="logo">
-                            </div>
+                            <Link to="/"><div className="logo">
+                            </div></Link>
                             <div id="top-menu">
                                 <ul>
                                     <Navbar />
@@ -65,18 +74,25 @@ const Header = () => {
                                 <a href="tel:84956698860">8 495 669 88 60</a>
                             </div>
                             <div className="btn-group social-btn-group">
-                                <span className="btn btn-wt-color"></span>
-                                <span className="btn btn-vb-color"></span>
+                                <span className="btn btn-wt-color" />
+                                <span className="btn btn-vb-color" />
                             </div>
                             <div className="btn-group top-btn-group">
-                                <span className="btn btn-primary" onClick={() => setSendMsgStatus(true)}>Узнать цену</span>
+                                <span className="btn btn-primary" onClick={openModal}>Узнать цену</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <MyModal visible={sendMsgStatus} setVisible={setSendMsgStatus}>
-                    <CallbackForm/>
-                </MyModal>
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Example Modal"
+                    className="mymodal"
+                    overlayClassName="myoverlay"
+                >
+                    <BtnCloseModal onClick={closeModal} />
+                    <CallbackForm closeModal={closeModal}/>
+                </Modal>
             </div>
     );
 };

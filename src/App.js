@@ -14,9 +14,10 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-    uri: 'https://testim.pw',
+    uri: 'https://testim.pw/graphql',
     cache: new InMemoryCache()
 });
+
 
 function App() {
     const options = {
