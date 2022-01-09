@@ -1,27 +1,27 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Loader from "../components/UI/loader/Loader";
 import Pagination from "../components/UI/pagination/Pagination";
 import ProductList from "../components/products/ProductList";
-import {
-    useQuery
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {PRODUCTS_GET_ALL} from "../GraphQL/queries";
+import {getPagesCount} from "../components/utlis/pages";
 
 const Products = () => {
+
+    const { loading, error, data } = useQuery(PRODUCTS_GET_ALL);
+
     const [posts, setPosts] = useState([])
     const [totalPages, setTotalPages] = useState(0)
     const [page, setPage] = useState(1)
 
+    useEffect(() => {
+        if(!loading) {
+            setPosts(data.products.nodes)
+            setTotalPages(data.products.nodes.length)
+        }
+    }, [data])
 
-    const { loading, error, data } = useQuery(PRODUCTS_GET_ALL);
-
-    if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    if(data) {
-        setPosts([])
-        setTotalPages(data.products.nodes.length)
-        setPosts(data.products.nodes)
-    }
 
     const changePage = (page) => {
         window.scrollTo(0, 0)

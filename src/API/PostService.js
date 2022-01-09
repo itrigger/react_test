@@ -3,7 +3,7 @@ import {getEndpoints} from "./constants";
 
 export default class PostService {
     static async getAll(limit = 10, page = 1) {
-        const response = await axios.get('https://testim.pw/wp-json/wp/v2/posts', {
+        const response = await axios.get('http://localhost/wp-json/wp/v2/posts', {
             params: {
                 per_page: limit,
                 page: page
@@ -13,7 +13,7 @@ export default class PostService {
     }
 
     static async getAllArticles(limit = 10, page = 1) {
-        const response = await axios.get('https://testim.pw/wp-json/wp/v2/articles/?_embed', {
+        const response = await axios.get('http://localhost/wp-json/wp/v2/posts/?_embed', {
            /* params: {
                 per_page: limit,
                 page: page
@@ -23,7 +23,7 @@ export default class PostService {
     }
 
     static async getById(id) {
-        const response = await axios.get(`https://testim.pw/wp-json/wp/v2/articles/${id}/?_embed`)
+        const response = await axios.get(`http://localhost/wp-json/wp/v2/posts/${id}/?_embed`)
         return response
     }
 

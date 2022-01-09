@@ -654,7 +654,8 @@ body * {
     height: 100%;
     position: absolute;
     left: 0;
-    top: 0; }
+    top: 0;
+    z-index: -1; }
 
 .yellow-rounded {
   font-size: 10px;
@@ -2591,7 +2592,8 @@ a.big-vb {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; }
+    overflow: hidden;
+    background: #d2d2d2; }
     .catalog--products-ul .product .img_wrapper img {
       max-width: 100%; }
   .catalog--products-ul .product .catalog--item--name {

@@ -3,7 +3,6 @@ import {useAlert} from "react-alert";
 import PostService from "../../API/PostService";
 import MyInput from "../UI/input/MyInput";
 import BtnPrimary from "../UI/button/BtnPrimary";
-import {SendMsgOk} from "../../context";
 
 const CallbackForm = ({closeModal}) => {
     const [post, setPost] = useState({
