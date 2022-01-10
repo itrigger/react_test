@@ -1,29 +1,27 @@
 import React, {useEffect, useState} from 'react';
-import {useFetching} from "../hook/useFetching";
-import {getPagesCount} from "../components/utlis/pages";
 import Loader from "../components/UI/loader/Loader";
 import Pagination from "../components/UI/pagination/Pagination";
-import ProductService from "../API/ProductService";
 import ProductList from "../components/products/ProductList";
+import { useQuery } from "@apollo/client";
+import {PRODUCTS_GET_ALL} from "../GraphQL/queries";
+import {getPagesCount} from "../components/utlis/pages";
 
 const Products = () => {
+
+    const { loading, error, data } = useQuery(PRODUCTS_GET_ALL);
+
     const [posts, setPosts] = useState([])
     const [totalPages, setTotalPages] = useState(0)
-    const [limit] = useState(12)
     const [page, setPage] = useState(1)
 
-    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-        setPosts([])
-        const response = await ProductService.getAllProducts(page, limit)
-        console.log(response)
-        setPosts(response.data)
-        const totalCount = response.headers['x-wp-total']
-        setTotalPages(getPagesCount(totalCount, limit))
-    })
-
     useEffect(() => {
-        fetchPosts()
-    }, [page, limit])
+        if(!loading) {
+            setPosts(data.products.nodes)
+            setTotalPages(data.products.nodes.length)
+        }
+    }, [data])
+
+    if (error) return <p>Error :(</p>;
 
     const changePage = (page) => {
         window.scrollTo(0, 0)
@@ -34,7 +32,7 @@ const Products = () => {
         <div className="in">
             <ProductList posts={posts}/>
 
-            {isPostsLoading && <Loader/>}
+            {loading && <Loader/>}
 
             <Pagination totalPages={totalPages} page={page} changePage={changePage}/>
         </div>

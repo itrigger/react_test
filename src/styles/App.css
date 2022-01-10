@@ -11,7 +11,9 @@
 html {
   color: #222;
   font-size: 1em;
-  line-height: 1.4; }
+  line-height: 1.4;
+  padding: 0;
+  margin: 0; }
 
 /*
  * Remove text-shadow in selection highlight:
@@ -570,9 +572,8 @@ textarea {
 .btnSendForm {
   width: 100%; }
 
-html {
-  padding: 0;
-  margin: 0; }
+.mymodal .form-wrap h2 {
+  margin-right: 40px; }
 
 body {
   font-family: "Stem-Regular", sans-serif;
@@ -653,7 +654,8 @@ body * {
     height: 100%;
     position: absolute;
     left: 0;
-    top: 0; }
+    top: 0;
+    z-index: -1; }
 
 .yellow-rounded {
   font-size: 10px;
@@ -869,6 +871,45 @@ h1 {
     .paginator span.active {
       background: #0bbc93; }
 
+.mymodal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: none;
+  background: transparent;
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 0; }
+
+.myoverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 999999; }
+
+.mymodalBtnClose {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; }
+
+@media (max-width: 576px) {
+  .mymodal {
+    width: calc(100% - 20px); } }
 #header {
   border-bottom: 1px solid rgba(93, 104, 122, 0.3);
   padding-bottom: 11px; }
@@ -1028,7 +1069,8 @@ h1 {
 
 .calculator {
   padding: 25px 35px 20px;
-  color: #fff; }
+  color: #fff;
+  transition: all 0.3s; }
   .calculator select {
     width: 310px;
     height: 55px;
@@ -1048,6 +1090,8 @@ h1 {
     padding: 0 17px; }
     .calculator input[type=text]:focus, .calculator input[type=text]:active {
       outline: none !important; }
+    .calculator input[type=text].error {
+      background-color: #e2b2b2; }
   .calculator .row-total {
     display: flex;
     height: 55px;
@@ -1080,16 +1124,31 @@ h1 {
 .input-error {
   border: 2px solid red !important; }
 
+.els-body {
+  transition: all 0.3s; }
+  .els-body.disabled {
+    pointer-events: none;
+    opacity: 0.8; }
+
 .els-header {
   font-size: 26px;
   margin-bottom: 17px; }
+
+.loading_text {
+  display: inline-block;
+  font-size: 15px; }
 
 .els-row {
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-bottom: 20px;
-  position: relative; }
+  position: relative;
+  transition: 0.3s all;
+  opacity: 1; }
+  .els-row.collapsed {
+    opacity: 0;
+    transition: 0.3s all; }
 
 .els-del {
   display: flex;
@@ -2533,7 +2592,8 @@ a.big-vb {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; }
+    overflow: hidden;
+    background: #d2d2d2; }
     .catalog--products-ul .product .img_wrapper img {
       max-width: 100%; }
   .catalog--products-ul .product .catalog--item--name {

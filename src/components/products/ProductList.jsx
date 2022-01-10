@@ -6,10 +6,10 @@ import Loader from "../UI/loader/Loader";
 const ProductList = ({posts}) => {
     if(!posts.length){
         return (
-            <div>
+            <>
+            <Loader/>
             <ProductSkeleton />
-                <Loader />
-            </div>
+            </>
         )
     }
     return (

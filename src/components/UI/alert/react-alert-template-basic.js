@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BaseIcon = function BaseIcon(_ref) {
+let BaseIcon = function BaseIcon(_ref) {
     let color = _ref.color,
         _ref$pushRight = _ref.pushRight,
         pushRight = _ref$pushRight === undefined ? true : _ref$pushRight,
@@ -24,16 +24,16 @@ const BaseIcon = function BaseIcon(_ref) {
 };
 
 
-const CloseIcon = function CloseIcon() {
+let CloseIcon = function CloseIcon() {
     return React.createElement(
         BaseIcon,
-        { color: '#FFFFFF', pushRight: false },
+        { color: '#ffffff', pushRight: false },
         React.createElement('line', { x1: '18', y1: '6', x2: '6', y2: '18' }),
         React.createElement('line', { x1: '6', y1: '6', x2: '18', y2: '18' })
     );
 };
 
-const _extends = Object.assign || function (target) {
+let _extends = Object.assign || function (target) {
     for (let i = 1; i < arguments.length; i++) {
         let source = arguments[i];
 
@@ -73,7 +73,7 @@ let alertStyleSuccess = {
     fontFamily: 'Arial',
     width: '300px',
     boxSizing: 'border-box'
-};
+}
 
 let alertStyleError = {
     backgroundColor: '#ec5a5a',
@@ -87,7 +87,7 @@ let alertStyleError = {
     fontFamily: 'Arial',
     width: '300px',
     boxSizing: 'border-box'
-};
+}
 
 let buttonStyle = {
     marginLeft: '20px',
@@ -97,34 +97,36 @@ let buttonStyle = {
     color: '#FFFFFF',
     position: 'absolute',
     top: '15px',
-    right: '10px'
+    right: '10px',
 };
 
-let AlertTemplate = function AlertTemplate(_ref) {
+const AlertTemplate = function AlertTemplate(_ref) {
     let message = _ref.message,
         options = _ref.options,
         style = _ref.style,
         close = _ref.close;
 
-    let newStyle = alertStyle
+    let newStyle = alertStyle;
 
-    if(options.type === 'success') {
-        newStyle = alertStyleSuccess
+    if(options.type === 'success'){
+        newStyle = alertStyleSuccess;
     } else if(options.type === 'error') {
-        newStyle = alertStyleError
+        newStyle = alertStyleError;
     }
 
     return React.createElement(
         'div',
-        { style: _extends({}, newStyle, style) },
+        {style: _extends({},
+                newStyle,
+                style)},
         React.createElement(
             'span',
-            { style: { flex: 2 } },
+            {style: {flex: 2}},
             message
         ),
         React.createElement(
             'button',
-            { onClick: close, style: buttonStyle },
+            {onClick: close, style: buttonStyle},
             React.createElement(CloseIcon, null)
         )
     );
