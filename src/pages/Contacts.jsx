@@ -3,7 +3,7 @@ import CallbackForm from "../components/forms/CallbackForm";
 
 const Contacts = () => {
     return (
-        <div>
+        <div className="in">
          <CallbackForm />
         </div>
     );

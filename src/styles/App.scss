@@ -267,11 +267,16 @@ textarea {
 @import "parts/form";
 
 
+html{
+  padding: 0;
+  margin: 0;
+}
 
 body{
-  /*  background: url('../img/temp.jpg') center top no-repeat;*/
   font-family: $freg;
   font-size: 17px;
+  padding: 0;
+  margin: 0;
 }
 
 body *{

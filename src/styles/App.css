@@ -570,10 +570,15 @@ textarea {
 .btnSendForm {
   width: 100%; }
 
+html {
+  padding: 0;
+  margin: 0; }
+
 body {
-  /*  background: url('../img/temp.jpg') center top no-repeat;*/
   font-family: "Stem-Regular", sans-serif;
-  font-size: 17px; }
+  font-size: 17px;
+  padding: 0;
+  margin: 0; }
 
 body * {
   box-sizing: border-box; }
