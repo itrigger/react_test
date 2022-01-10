@@ -15,8 +15,7 @@ import {
 } from "@apollo/client";
 
 const link = createHttpLink({
-    uri: 'http://localhost/graphql',
-    credentials: 'include',
+    uri: 'https://testim.pw/graphql'
 });
 
 const client = new ApolloClient({
@@ -40,8 +39,6 @@ function App() {
         <ApolloProvider client={client}>
             <CalcContext.Provider value={{rows, setRows}}>
                 <SendMsgOk.Provider value={{
-                    sendMsgStatus,
-                    setSendMsgStatus,
                     activeMobMenu,
                     setActiveMobMenu
                 }}>
