@@ -1,10 +1,14 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {DISCOUNTS, PRECIOUS_METAL} from "../../static/stocks";
 import {CalcContext} from "../../context";
 import {useQuery} from "@apollo/client";
 import {PRODUCTS_GET_BY_CATEGORY_ID} from "../../GraphQL/queries";
 import Loader from "../UI/loader/Loader";
 import {useAlert} from "react-alert";
+import ProductService from "../../API/ProductService";
+import {useFetching} from "../../hook/useFetching";
+import PostService from "../../API/PostService";
+import {getPagesCount} from "../utlis/pages";
 
 const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
 
@@ -12,14 +16,14 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     const alert = useAlert();
 
     const [catsCur, setCatsCur] = useState(JSON.parse(localStorage.getItem('categories')) || cats)
-    const [productItem, setProductItem] = useState([{databaseId:0,name:''}])
+    const [productItem, setProductItem] = useState([{}])
     const [inputVal, setInputVal] = useState(count)
     const [inputValError, setInputValError] = useState('')
     const [select1, setSelect1] = useState(sel1ActiveValue)
     const [select2, setSelect2] = useState('0')
     const [itemPrice, setItemPrice] = useState(0)
     const [isSelLoading, setIsSelLoading] = useState(true)
-    const [currentId, setCurrentId] = useState(18)
+    const [currentId, setCurrentId] = useState()
 
     const inputValChange = (event) => {
         if (!(parseInt(event.target.value) < 1) || !(event.target.value !== '')) {
@@ -37,35 +41,39 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     useEffect(() => {
         if (parseInt(select2) !== 0 && parseInt(select2) !== undefined) {
             calcRowPrice(parseInt(select2))
-           // updateRow(id)
+            // updateRow(id)
         }
         return () => {
             // console.log('unmount')
         }
     }, [inputVal, select2])
 
-    const {loading, error, data} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
-        variables: {
-            categoryId: parseInt(currentId)
-        }
-    });
+    /*   const {loading, error, data} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
+           variables: {
+               categoryId: parseInt(currentId)
+           }
+       });
 
-    if (error) {
-        alert.error(error)
-    }
+       if (error) {
+           alert.error(error)
+       }*/
 
-    useEffect(() => {
-        if (!loading) {
-            setProductItem(data.products.nodes)
-            setIsSelLoading(false)
-            localStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
-            //console.log(data.products.nodes[0].databaseId)
-        }
-    }, [data])
+    /*    useEffect(() => {
+            if (!loading) {
+                setProductItem(data.products.nodes)
+                setIsSelLoading(false)
+                localStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
+            }
+        }, [data])*/
 
-/*    useEffect(() => {
-        calcRowPrice(productItem[0].databaseId)
-    }, [productItem])*/
+
+    useEffect(async () => {
+        const response = await ProductService.getAllProductsByCategoryID(100, currentId)
+        setProductItem(response.data)
+        productItem.length > 1 ? setIsSelLoading(false) : setIsSelLoading(true)
+        console.log(productItem.length)
+        console.log(response.data)
+    }, [currentId])
 
     const changeCat = (event) => {
         let id = event.target.value
@@ -123,15 +131,15 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
 
     return (
         <div>
-            {loading && <Loader/>}
+            {/*{loading && <Loader/>}*/}
             <div className="els-row els-row-1">
                 <div className="els-del" onClick={() => deleteRow(id)}>×</div>
                 <div className="el-wrap">
                     <select className="el-type el-type-1" name="el-type" value={select1}
                             onChange={changeCat}>
-                        <option disabled hidden value="0">Выберите тип элемента</option>
-                        {catsCur.map((item,index) => <option key={index}
-                                                  value={item.productCategoryId}>{item.name}</option>)}
+                        <option key={0} disabled hidden value="0">Выберите тип элемента</option>
+                        {catsCur.map((item, index) => <option key={index}
+                                                              value={item.productCategoryId}>{item.name}</option>)}
                     </select>
                 </div>
                 <div className="el-wrap">
@@ -142,9 +150,8 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
                         disabled={isSelLoading}
                         onChange={changeCat2}
                     >
-                        <option disabled hidden value="0">Наименование</option>
-                        {productItem.map(item => <option key={item.databaseId}
-                                                         value={item.databaseId}>{item.name}</option>)}
+                        <option key={0} disabled hidden value="0">Наименование</option>
+                        { productItem.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
                     </select>
                 </div>
                 <div className="el-wrap labeled-input">
