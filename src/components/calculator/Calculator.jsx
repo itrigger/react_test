@@ -4,8 +4,11 @@ import {CalcContext} from "../../context";
 import {useQuery} from "@apollo/client";
 import {CATEGORIES_GET_ALL} from "../../GraphQL/queries";
 import Loader from "../UI/loader/Loader";
+import {useAlert} from "react-alert";
 
 const Calculator = () => {
+
+    const alert = useAlert();
 
     const {rows, setRows} = useContext(CalcContext)
     const [cats, setCats] = useState([{}])

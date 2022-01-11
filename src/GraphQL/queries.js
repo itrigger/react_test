@@ -6,7 +6,7 @@ export const PRODUCTS_GET_ALL = gql`
         nodes {
           id
           image {
-            sourceUrl(size: THUMBNAIL)
+            sourceUrl(size: LARGE)
           }
           name
           metaData {

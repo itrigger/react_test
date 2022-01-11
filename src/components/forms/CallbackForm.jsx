@@ -22,10 +22,13 @@ const CallbackForm = ({closeModal}) => {
         formData.set("CFtel", post.tel)
 
         let response = await PostService.sendFormCF7(formData, 12)
+        if(!response){alert.error('Сервер не отвечает')}
         if(response.data.status === "mail_sent"){
+            alert.removeAll()
             alert.success(response.data.message)
             closeModal()
         } else {
+            alert.removeAll()
             alert.error(response.data.message)
         }
     }

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import Navbar from "../UI/navbar/Navbar";
 import {SendMsgOk} from "../../context";
 import MyModal from "../UI/modal/MyModal";
