@@ -20,7 +20,7 @@ export const PRODUCTS_GET_ALL = gql`
 
 export const PRODUCTS_GET_BY_CATEGORY_ID = gql`
 query GetProductsByCategoryId($categoryId: Int) {
-  products(where: {categoryId: $categoryId}) {
+  products(where: {categoryId: $categoryId}, first: 100) {
     nodes {
       name
       databaseId
@@ -36,7 +36,7 @@ query GetProductsByCategoryId($categoryId: Int) {
 
 export const CATEGORIES_GET_ALL = gql`
 query GetAllCategories {
-  productCategories {
+  productCategories(first: 100) {
     nodes {
       name
       productCategoryId

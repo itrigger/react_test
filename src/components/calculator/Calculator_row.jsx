@@ -3,12 +3,8 @@ import {DISCOUNTS, PRECIOUS_METAL} from "../../static/stocks";
 import {CalcContext} from "../../context";
 import {useQuery} from "@apollo/client";
 import {PRODUCTS_GET_BY_CATEGORY_ID} from "../../GraphQL/queries";
-import Loader from "../UI/loader/Loader";
 import {useAlert} from "react-alert";
-import ProductService from "../../API/ProductService";
-import {useFetching} from "../../hook/useFetching";
-import PostService from "../../API/PostService";
-import {getPagesCount} from "../utlis/pages";
+import Loader from "../UI/loader/Loader";
 
 const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
 
@@ -16,14 +12,14 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     const alert = useAlert();
 
     const [catsCur, setCatsCur] = useState(JSON.parse(localStorage.getItem('categories')) || cats)
-    const [productItem, setProductItem] = useState([{}])
+    const [productItem, setProductItem] = useState([])
     const [inputVal, setInputVal] = useState(count)
     const [inputValError, setInputValError] = useState('')
     const [select1, setSelect1] = useState(sel1ActiveValue)
     const [select2, setSelect2] = useState('0')
     const [itemPrice, setItemPrice] = useState(0)
     const [isSelLoading, setIsSelLoading] = useState(true)
-    const [currentId, setCurrentId] = useState()
+    const [currentId, setCurrentId] = useState('1')
 
     const inputValChange = (event) => {
         if (!(parseInt(event.target.value) < 1) || !(event.target.value !== '')) {
@@ -48,41 +44,50 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }, [inputVal, select2])
 
-    /*   const {loading, error, data} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
-           variables: {
-               categoryId: parseInt(currentId)
-           }
-       });
 
-       if (error) {
-           alert.error(error)
-       }*/
+    const {loading, error, data, refetch} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
+        variables: {
+            categoryId: parseInt(currentId)
+        }
+    });
 
-    /*    useEffect(() => {
-            if (!loading) {
-                setProductItem(data.products.nodes)
-                setIsSelLoading(false)
-                localStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
+
+    if (error) {
+        alert.error(error)
+    }
+
+    useEffect(() => {
+        setSelect2('0')
+        ClearItemPrice()
+        if (!loading) {
+            setProductItem(data.products.nodes)
+            setIsSelLoading(false)
+            localStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
+        }
+    }, [data])
+
+
+    useEffect(() => {
+        refetch(
+            {
+                categoryId: parseInt(currentId)
             }
-        }, [data])*/
-
-
-    useEffect(async () => {
-        const response = await ProductService.getAllProductsByCategoryID(100, currentId)
-        setProductItem(response.data)
-        productItem.length > 1 ? setIsSelLoading(false) : setIsSelLoading(true)
-        console.log(productItem.length)
-        console.log(response.data)
+        )
     }, [currentId])
+
+    const ClearItemPrice = () => {
+        setItemPrice(0)
+    }
 
     const changeCat = (event) => {
         let id = event.target.value
         setSelect1(event.target.value)
         setIsSelLoading(true)
+        setSelect2('0')
+        ClearItemPrice()
         if (JSON.parse(localStorage.getItem(`categories${id}`)) !== null) {
             setProductItem(JSON.parse(localStorage.getItem(`categories${id}`)))
             setIsSelLoading(false)
-            console.log(select2)
         } else {
             setCurrentId(id)
         }
@@ -95,21 +100,32 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }
 
-    const updateRow = (rowId) => {
-        const newRows = rows.map((item) => item.id === rowId ? {
-            ...item,
-            id: rowId,
-            sel1: select1,
-            sel2: select2,
-            count: inputVal
-        } : item)
-        setRows(newRows)
+
+    const SaveItemToLs = () => {
+        console.clear()
+        console.log('Кол-во: ' + inputVal)
+        console.log('ID sel 1: ' + select1)
+        console.log('ID sel 2: ' + select2)
+        console.log('Row price: ' + itemPrice)
+        let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
+        if(filteredProductItem[0]){
+            console.log(filteredProductItem[0].name)
+            console.log(filteredProductItem[0].metaData.filter(item => item.key === 'typecount')[0].value)
+        }
+        let filteredCatsItem = cats.filter(item => item.productCategoryId === parseInt(select1))
+        if(filteredCatsItem[0]){
+            console.log(filteredCatsItem[0].name)
+        }
+
     }
 
+    useEffect(() => {
+        SaveItemToLs()
+    },[inputVal,select2, itemPrice])
 
     const calcRowPrice = (id) => {
+        ClearItemPrice()
         let filteredProductItem = productItem.filter(item => item.databaseId === id)
-
         let item_gold = filteredProductItem[0].metaData.filter(item => item.key === 'gold')[0].value !== null ? filteredProductItem[0].metaData.filter(item => item.key === 'gold')[0].value : 0
         let item_silver = filteredProductItem[0].metaData.filter(item => item.key === 'silver')[0].value !== null ? filteredProductItem[0].metaData.filter(item => item.key === 'silver')[0].value : 0
         let item_platinum = filteredProductItem[0].metaData.filter(item => item.key === 'platinum')[0].value !== null ? filteredProductItem[0].metaData.filter(item => item.key === 'platinum')[0].value : 0
@@ -117,8 +133,10 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         let fixprice = filteredProductItem[0].metaData.filter(item => item.key === 'fixprice')[0].value !== null ? filteredProductItem[0].metaData.filter(item => item.key === 'fixprice')[0].value : 0
         if (inputVal) {
             setInputValError('')
-            if (fixprice > 0) {
+            if (fixprice > 0 && fixprice !== '999999') {
                 setItemPrice(fixprice * inputVal)
+            } else if (fixprice === '999999') {
+                setItemPrice('Догов.')
             } else {
                 let item_price = (item_gold * PRECIOUS_METAL.GOLD * DISCOUNTS.GOLD_DISCOUNT + item_silver * PRECIOUS_METAL.SILVER * DISCOUNTS.SILVER_DISCOUNT + item_palladium * PRECIOUS_METAL.PALLADIUM * DISCOUNTS.PALLADIUM_DISCOUNT + item_platinum * PRECIOUS_METAL.PLATINUM * DISCOUNTS.PLATINUM_DISCOUNT) * 0.4 * PRECIOUS_METAL.RUB * parseInt(inputVal);
                 setItemPrice(Math.round(item_price))
@@ -131,13 +149,13 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
 
     return (
         <div>
-            {/*{loading && <Loader/>}*/}
+            {loading && <Loader/>}
             <div className="els-row els-row-1">
                 <div className="els-del" onClick={() => deleteRow(id)}>×</div>
                 <div className="el-wrap">
                     <select className="el-type el-type-1" name="el-type" value={select1}
                             onChange={changeCat}>
-                        <option key={0} disabled hidden value="0">Выберите тип элемента</option>
+                        <option disabled hidden value="0">Выберите тип элемента</option>
                         {catsCur.map((item, index) => <option key={index}
                                                               value={item.productCategoryId}>{item.name}</option>)}
                     </select>
@@ -150,8 +168,9 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
                         disabled={isSelLoading}
                         onChange={changeCat2}
                     >
-                        <option key={0} disabled hidden value="0">Наименование</option>
-                        { productItem.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
+                        <option disabled hidden value="0">Выберите наименование</option>
+                        {productItem.map(item => <option key={item.databaseId}
+                                                         value={item.databaseId}>{item.name}</option>)}
                     </select>
                 </div>
                 <div className="el-wrap labeled-input">
