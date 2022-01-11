@@ -19,7 +19,15 @@ const Calculator = () => {
     }
 
     const deleteRow = (id) => {
-        setRows(rows.filter(p => p.id !== id))
+        let newRows = rows.filter(p => p.id !== (id-1))
+        setRows(newRows)
+        if(localStorage.getItem('order') !== null){
+            let dataLS = JSON.parse(localStorage.getItem('order'))
+            if(dataLS) {
+                let newArr = dataLS.filter(item => item.LSrowID !== (id+1))
+                localStorage.setItem('order', JSON.stringify(newArr))
+            }
+        }
     }
 
     const {loading, error, data} = useQuery(CATEGORIES_GET_ALL);

@@ -8,7 +8,7 @@ import Loader from "../UI/loader/Loader";
 
 const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
 
-    const {rows, setRows} = useContext(CalcContext)
+    const {rows, setRows} = useContext(CalcContext) //в контексте храним общее кол-во строк в калькуляторе
     const alert = useAlert();
 
     const [catsCur, setCatsCur] = useState(JSON.parse(localStorage.getItem('categories')) || cats)
@@ -21,6 +21,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     const [isSelLoading, setIsSelLoading] = useState(true)
     const [currentId, setCurrentId] = useState('1')
 
+    //обработчик поля ввода кол-ва товаров, также меняем стэйт Ошибки, если поле пусто или значение меньше 1
     const inputValChange = (event) => {
         if (!(parseInt(event.target.value) < 1) || !(event.target.value !== '')) {
             setInputValError('')
@@ -30,10 +31,12 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }
 
+    //список категорий получаем в компоненте выше асинхронно, а тут обновляем первый селект при получении данных
     useEffect(() => {
         setCatsCur(cats)
     }, [cats])
 
+    //Эффект обновления цены в строке калькулятора при изменении выпадающего списка номер 2 или поля кол-ва
     useEffect(() => {
         if (parseInt(select2) !== 0 && parseInt(select2) !== undefined) {
             calcRowPrice(parseInt(select2))
@@ -44,18 +47,19 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }, [inputVal, select2])
 
-
+    //запрос к АПИ с параметром через Аполло
     const {loading, error, data, refetch} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
         variables: {
             categoryId: parseInt(currentId)
         }
     });
 
-
+    // выводим сообщение об ошибке, если сервер выдал таковое
     if (error) {
         alert.error(error)
     }
 
+    //записываем в локальное хранилище и стэйт список всех категорий
     useEffect(() => {
         setSelect2('0')
         ClearItemPrice()
@@ -66,7 +70,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }, [data])
 
-
+    //обновляем запрос к АПИ с параметром при смене стэйта со значением категории
     useEffect(() => {
         refetch(
             {
@@ -75,10 +79,12 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         )
     }, [currentId])
 
+    //функция обнуления цены в поле Сумма
     const ClearItemPrice = () => {
         setItemPrice(0)
     }
 
+    //функция обработчик первого селекта, делаем проверку есть ли товары из нужной категории в локальном хранилище, если нет, меняет стэйт setCurrentId
     const changeCat = (event) => {
         let id = event.target.value
         setSelect1(event.target.value)
@@ -93,6 +99,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }
 
+    //функция обработчик второго селекта, если значение не пустое, то вычисляем цену товарной позиции
     const changeCat2 = (event) => {
         setSelect2(event.target.value)
         if (parseInt(event.target.value) !== 0 && parseInt(event.target.value) !== undefined) {
@@ -100,29 +107,50 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }
 
-
+    //Сохраняем строку калькулятора в локальное хранилище
+    //Данные храним в локальном хранилище, чтобы при повторном открытии сайта они сохранялись и подгружались
     const SaveItemToLs = () => {
-        console.clear()
-        console.log('Кол-во: ' + inputVal)
-        console.log('ID sel 1: ' + select1)
-        console.log('ID sel 2: ' + select2)
-        console.log('Row price: ' + itemPrice)
+        let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data
+        LSrowID = rows.length
+        LSitemID = select2
+        LScatID = select1
+        LSsum = itemPrice
+        LScount = inputVal
         let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
         if(filteredProductItem[0]){
-            console.log(filteredProductItem[0].name)
-            console.log(filteredProductItem[0].metaData.filter(item => item.key === 'typecount')[0].value)
+            LSitemName = filteredProductItem[0].name
+            LStypeOfCount = filteredProductItem[0].metaData.filter(item => item.key === 'typecount')[0].value
         }
         let filteredCatsItem = cats.filter(item => item.productCategoryId === parseInt(select1))
         if(filteredCatsItem[0]){
-            console.log(filteredCatsItem[0].name)
+            LScatName = filteredCatsItem[0].name
         }
 
+        if(localStorage.getItem('order') !== null){
+            let dataLS = JSON.parse(localStorage.getItem('order'))
+            data = {LSrowID, LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum}
+            if(dataLS) {
+               let newArr = dataLS.filter(item => item.LSrowID !== LSrowID)
+                newArr.push(data)
+                localStorage.setItem('order', JSON.stringify(newArr))
+            }
+        } else {
+            if(LSsum>0) {
+                data = [{LSrowID, LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum}]
+                localStorage.setItem('order', JSON.stringify(data))
+            }
+        }
     }
 
+    //JSON.parse - получить
+    //JSON.stringify - записать
+
+    //запускаем функцию сохранения в ЛС при изменении стэйта зависимых полей
     useEffect(() => {
         SaveItemToLs()
     },[inputVal,select2, itemPrice])
 
+    //функция подсчета цены строки калькулятора
     const calcRowPrice = (id) => {
         ClearItemPrice()
         let filteredProductItem = productItem.filter(item => item.databaseId === id)
@@ -146,6 +174,8 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
             setInputValError('error')
         }
     }
+
+
 
     return (
         <div>

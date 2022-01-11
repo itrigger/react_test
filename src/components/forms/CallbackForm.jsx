@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {useAlert} from "react-alert";
 import PostService from "../../API/PostService";
 import MyInput from "../UI/input/MyInput";

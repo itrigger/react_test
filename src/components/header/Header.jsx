@@ -1,7 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 import Navbar from "../UI/navbar/Navbar";
 import {SendMsgOk} from "../../context";
-import MyModal from "../UI/modal/MyModal";
 import CallbackForm from "../forms/CallbackForm";
 import {Link, useHistory} from "react-router-dom";
 import Modal from 'react-modal';
