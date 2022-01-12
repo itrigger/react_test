@@ -1,6 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Calculator_row from "./Calculator_row";
-import {CalcContext} from "../../context";
 import {useQuery} from "@apollo/client";
 import {CATEGORIES_GET_ALL} from "../../GraphQL/queries";
 import Loader from "../UI/loader/Loader";
@@ -10,21 +9,17 @@ const Calculator = () => {
 
     const alert = useAlert();
 
-    const {rows, setRows} = useContext(CalcContext)
     const [cats, setCats] = useState([{}])
 
     const addRow = () => {
-        let newId = rows.length
-        setRows([...rows, {id: newId, sel1: "0", sel2: "0", count: "1"}])
+
     }
 
     const deleteRow = (id) => {
-        let newRows = rows.filter(p => p.id !== (id-1))
-        setRows(newRows)
-        if(localStorage.getItem('order') !== null){
+        if (localStorage.getItem('order') !== null) {
             let dataLS = JSON.parse(localStorage.getItem('order'))
-            if(dataLS) {
-                let newArr = dataLS.filter(item => item.LSrowID !== (id+1))
+            if (dataLS) {
+                let newArr = dataLS.filter(item => item.LSrowID !== id)
                 localStorage.setItem('order', JSON.stringify(newArr))
             }
         }
@@ -57,8 +52,6 @@ const Calculator = () => {
                                 id={row.id}
                                 deleteRow={deleteRow}
                                 count={row.count}
-                                sel1ActiveValue={row.sel1}
-                                sel2ActiveValue={row.sel2}
                             />
                         )
                     )}

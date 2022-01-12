@@ -33,11 +33,9 @@ function App() {
 
    // const [sendMsgStatus, setSendMsgStatus] = useState(false)  //глобальное управление модальным окном
     const [activeMobMenu, setActiveMobMenu] = useState('')  //глобальное управление модальным окном мобильного меню
-    const [rows, setRows] = useState([{id: 0, sel1: "0", sel2:"0", count: "1"}])
 
     return (
         <ApolloProvider client={client}>
-            <CalcContext.Provider value={{rows, setRows}}>
                 <SendMsgOk.Provider value={{
                     activeMobMenu,
                     setActiveMobMenu
@@ -50,7 +48,6 @@ function App() {
                         </Router>
                     </Provider>
                 </SendMsgOk.Provider>
-            </CalcContext.Provider>
         </ApolloProvider>
     )
 }

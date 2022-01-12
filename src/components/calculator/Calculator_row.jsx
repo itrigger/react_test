@@ -111,7 +111,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     //Данные храним в локальном хранилище, чтобы при повторном открытии сайта они сохранялись и подгружались
     const SaveItemToLs = () => {
         let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data
-        LSrowID = rows.length
+        LSrowID = rows
         LSitemID = select2
         LScatID = select1
         LSsum = itemPrice
@@ -182,7 +182,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
             {loading && <Loader/>}
             <div className="els-row els-row-1">
                 <div className="els-del" onClick={() => deleteRow(id)}>×</div>
-                <div className="el-wrap">
+                <div className="el-wrap">{id}
                     <select className="el-type el-type-1" name="el-type" value={select1}
                             onChange={changeCat}>
                         <option disabled hidden value="0">Выберите тип элемента</option>
