@@ -1,25 +1,23 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {DISCOUNTS, PRECIOUS_METAL} from "../../static/stocks";
-import {CalcContext} from "../../context";
 import {useQuery} from "@apollo/client";
 import {PRODUCTS_GET_BY_CATEGORY_ID} from "../../GraphQL/queries";
 import {useAlert} from "react-alert";
 import Loader from "../UI/loader/Loader";
 
-const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
+const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow, rows, setRows}) => {
 
-    const {rows, setRows} = useContext(CalcContext) //в контексте храним общее кол-во строк в калькуляторе
-    const alert = useAlert();
+    const alert = useAlert(); //модуль алертов
 
-    const [catsCur, setCatsCur] = useState(JSON.parse(localStorage.getItem('categories')) || cats)
-    const [productItem, setProductItem] = useState([])
-    const [inputVal, setInputVal] = useState(count)
-    const [inputValError, setInputValError] = useState('')
-    const [select1, setSelect1] = useState(sel1ActiveValue)
-    const [select2, setSelect2] = useState('0')
-    const [itemPrice, setItemPrice] = useState(0)
-    const [isSelLoading, setIsSelLoading] = useState(true)
-    const [currentId, setCurrentId] = useState('1')
+    const [catsCur, setCatsCur] = useState(JSON.parse(localStorage.getItem('categories')) || cats) //список всех категорий для первого селекта
+    const [productItem, setProductItem] = useState([]) //список продуктов для второго селекта
+    const [inputVal, setInputVal] = useState(count) //значение поля ввода кол-ва
+    const [inputValError, setInputValError] = useState('') //состояние ошибки в поле ввода кол-ва
+    const [select1, setSelect1] = useState(sel1ActiveValue) //состояние селекта 1
+    const [select2, setSelect2] = useState('0') //состояние селекта 2
+    const [itemPrice, setItemPrice] = useState(0) //состояние цены строки
+    const [isSelLoading, setIsSelLoading] = useState(true) //состояние блокировки второго селекта
+    const [currentId, setCurrentId] = useState('1') //айди выбранной категории в строке калькулятора
 
     //обработчик поля ввода кол-ва товаров, также меняем стэйт Ошибки, если поле пусто или значение меньше 1
     const inputValChange = (event) => {
@@ -70,7 +68,7 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         }
     }, [data])
 
-    //обновляем запрос к АПИ с параметром при смене стэйта со значением категории
+    //обновляем запрос к АПИ с параметром при смене стэйта со значением выбранной категории
     useEffect(() => {
         refetch(
             {
@@ -104,6 +102,8 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
         setSelect2(event.target.value)
         if (parseInt(event.target.value) !== 0 && parseInt(event.target.value) !== undefined) {
             calcRowPrice(parseInt(event.target.value))
+            let newRow = rows.filter(item => item.id !== id)
+            setRows(newRow)
         }
     }
 
@@ -111,7 +111,6 @@ const CalculatorRow = ({sel1ActiveValue, cats, count, id, deleteRow}) => {
     //Данные храним в локальном хранилище, чтобы при повторном открытии сайта они сохранялись и подгружались
     const SaveItemToLs = () => {
         let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data
-        LSrowID = rows
         LSitemID = select2
         LScatID = select1
         LSsum = itemPrice

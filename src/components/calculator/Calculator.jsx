@@ -11,6 +11,8 @@ const Calculator = () => {
 
     const [cats, setCats] = useState([{}])
 
+    const [rows, setRows] = useState([{id:0}])
+
     const addRow = () => {
 
     }
@@ -51,7 +53,8 @@ const Calculator = () => {
                                 key={index}
                                 id={row.id}
                                 deleteRow={deleteRow}
-                                count={row.count}
+                                rows={rows}
+                                setRows={setRows}
                             />
                         )
                     )}
