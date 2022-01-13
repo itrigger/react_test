@@ -19,7 +19,6 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
     const [isSelLoading, setIsSelLoading] = useState(true) //состояние блокировки второго селекта
     const [currentId, setCurrentId] = useState('1') //айди выбранной категории в строке калькулятора
 
-
     //обработчик поля ввода кол-ва товаров, также меняем стэйт Ошибки, если поле пусто или значение меньше 1
     const inputValChange = (event) => {
         if (!(parseInt(event.target.value) < 1) || !(event.target.value !== '')) {
@@ -79,6 +78,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
         LSsum = itemPrice
         LScount = inputVal
         LSrowID = row
+        console.log('row',row)
         let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
         if(filteredProductItem[0]){
             LSitemName = filteredProductItem[0].name

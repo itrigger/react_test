@@ -8,32 +8,27 @@ import {CalcContext} from "../../context";
 
 const Calculator = () => {
 
+
     const alert = useAlert();
 
     const [cats, setCats] = useState([{}])
-    const [rows, setRows] = useState([0])
     const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [])
+    const [rows, setRows] = useState([0])
     const {rowCountID, setRowCountID} = useContext(CalcContext)
 
-
-    const getFromLS = () => {
+    useEffect(() => {
+        let arr = []
         if (sessionStorage.getItem('order') !== null) {
-            let dataLS = JSON.parse(sessionStorage.getItem('order'))
-            if (dataLS) {
-                setSavedRows(dataLS)
-                //   sessionStorage.setItem('order', JSON.stringify(newArr))
-            }
+            JSON.parse(sessionStorage.getItem('order')).map((item) => arr.push(item.LSrowID))
+            setRows(arr)
+            setSavedRows(sessionStorage.getItem('order'))
+            console.log(savedRows)
         }
-    }
-
-    //getFromLS()
-
-    console.log(savedRows)
-    console.log(rows)
+    },[])
 
     const addRow = () => {
-        setRowCountID(rowCountID + 1)
-        setRows([...rows, rowCountID])
+        setRowCountID(Math.max(...rows) + 1)
+        setRows([...rows, Math.max(...rows) + 1])
     }
 
     const deleteRow = (row) => {
@@ -61,22 +56,14 @@ const Calculator = () => {
         }
     }, [data])
 
+    console.log(rows)
     return (
         <div>
             <div className="calculator gray-radio-bg" id="main-page--calculator">
                 <div className="els-header">Что продаёте?</div>
                 <div className="flex els-body flex-column">
-                    {loading ? <Loader/> : (savedRows.length > 0 ?
-                            savedRows.map((row, index) =>
-                                <Calculator_row
-                                    cats={cats}
-                                    key={row}
-                                    deleteRow={deleteRow}
-                                    count={1}
-                                    row={row}
-                                />
-                            )
-                            :
+                    {
+                        loading ? <Loader/> :
                             rows.map((row, index) =>
                                 <Calculator_row
                                     cats={cats}
@@ -86,7 +73,7 @@ const Calculator = () => {
                                     row={row}
                                 />
                             )
-                    )}
+                    }
                 </div>
                 <div className="els-footer">
                     <div className="el-add-row-btn" onClick={addRow}>
@@ -107,22 +94,4 @@ const Calculator = () => {
         </div>
     );
 };
-/*[
-    [
-        "1796",
-        "Блоки и оборудование",
-        "Б5-49",
-        "1",
-        "шт",
-        "200"
-    ],
-    [
-        "152",
-        "Реле",
-        "РПС-36Б ОС РС4.520.253 до 91 года паспорт (251, 252, 253)",
-        "2",
-        "шт",
-        "1003.33"
-    ]
-]*/
 export default Calculator;
