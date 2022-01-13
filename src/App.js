@@ -31,11 +31,15 @@ function App() {
         transition: transitions.SCALE,
     }
 
-   // const [sendMsgStatus, setSendMsgStatus] = useState(false)  //глобальное управление модальным окном
+    // const [sendMsgStatus, setSendMsgStatus] = useState(false)  //глобальное управление модальным окном
     const [activeMobMenu, setActiveMobMenu] = useState('')  //глобальное управление модальным окном мобильного меню
+    const [rowCountID, setRowCountID] = useState(1)
 
     return (
         <ApolloProvider client={client}>
+            <CalcContext.Provider value={{
+                rowCountID, setRowCountID
+            }}>
                 <SendMsgOk.Provider value={{
                     activeMobMenu,
                     setActiveMobMenu
@@ -48,6 +52,7 @@ function App() {
                         </Router>
                     </Provider>
                 </SendMsgOk.Provider>
+            </CalcContext.Provider>
         </ApolloProvider>
     )
 }

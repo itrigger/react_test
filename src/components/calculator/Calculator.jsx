@@ -1,28 +1,48 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Calculator_row from "./Calculator_row";
 import {useQuery} from "@apollo/client";
 import {CATEGORIES_GET_ALL} from "../../GraphQL/queries";
 import Loader from "../UI/loader/Loader";
 import {useAlert} from "react-alert";
+import {CalcContext} from "../../context";
 
 const Calculator = () => {
 
     const alert = useAlert();
 
     const [cats, setCats] = useState([{}])
+    const [rows, setRows] = useState([0])
+    const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [])
+    const {rowCountID, setRowCountID} = useContext(CalcContext)
 
-    const [rows, setRows] = useState([{id:0}])
 
-    const addRow = () => {
-
+    const getFromLS = () => {
+        if (sessionStorage.getItem('order') !== null) {
+            let dataLS = JSON.parse(sessionStorage.getItem('order'))
+            if (dataLS) {
+                setSavedRows(dataLS)
+                //   sessionStorage.setItem('order', JSON.stringify(newArr))
+            }
+        }
     }
 
-    const deleteRow = (id) => {
-        if (localStorage.getItem('order') !== null) {
-            let dataLS = JSON.parse(localStorage.getItem('order'))
+    //getFromLS()
+
+    console.log(savedRows)
+    console.log(rows)
+
+    const addRow = () => {
+        setRowCountID(rowCountID + 1)
+        setRows([...rows, rowCountID])
+    }
+
+    const deleteRow = (row) => {
+        setRows(rows.filter(p => p !== row))
+        if (sessionStorage.getItem('order') !== null) {
+            let dataLS = JSON.parse(sessionStorage.getItem('order'))
             if (dataLS) {
-                let newArr = dataLS.filter(item => item.LSrowID !== id)
-                localStorage.setItem('order', JSON.stringify(newArr))
+                let newArr = dataLS.filter(item => item.LSrowID !== row)
+                sessionStorage.setItem('order', JSON.stringify(newArr))
             }
         }
     }
@@ -36,7 +56,7 @@ const Calculator = () => {
     useEffect(() => {
         if (!loading) {
             let newData = data.productCategories.nodes.filter(item => item.productCategoryId !== 15)
-            localStorage.setItem('categories', JSON.stringify(newData))
+            sessionStorage.setItem('categories', JSON.stringify(newData))
             setCats(newData)
         }
     }, [data])
@@ -46,17 +66,26 @@ const Calculator = () => {
             <div className="calculator gray-radio-bg" id="main-page--calculator">
                 <div className="els-header">Что продаёте?</div>
                 <div className="flex els-body flex-column">
-                    {loading ? <Loader/> : (
-                        rows.map((row, index) =>
-                            <Calculator_row
-                                cats={cats}
-                                key={index}
-                                id={row.id}
-                                deleteRow={deleteRow}
-                                rows={rows}
-                                setRows={setRows}
-                            />
-                        )
+                    {loading ? <Loader/> : (savedRows.length > 0 ?
+                            savedRows.map((row, index) =>
+                                <Calculator_row
+                                    cats={cats}
+                                    key={row}
+                                    deleteRow={deleteRow}
+                                    count={1}
+                                    row={row}
+                                />
+                            )
+                            :
+                            rows.map((row, index) =>
+                                <Calculator_row
+                                    cats={cats}
+                                    key={row}
+                                    deleteRow={deleteRow}
+                                    count={1}
+                                    row={row}
+                                />
+                            )
                     )}
                 </div>
                 <div className="els-footer">
