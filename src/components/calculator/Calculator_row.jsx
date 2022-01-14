@@ -5,7 +5,7 @@ import {PRODUCTS_GET_BY_CATEGORY_ID} from "../../GraphQL/queries";
 import {useAlert} from "react-alert";
 import Loader from "../UI/loader/Loader";
 
-const CalculatorRow = ({row, cats, count, deleteRow}) => {
+const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
 
     const alert = useAlert(); //модуль алертов
 
@@ -19,6 +19,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
     const [isSelLoading, setIsSelLoading] = useState(true) //состояние блокировки второго селекта
     const [currentId, setCurrentId] = useState('1') //айди выбранной категории в строке калькулятора
 
+
     //обработчик поля ввода кол-ва товаров, также меняем стэйт Ошибки, если поле пусто или значение меньше 1
     const inputValChange = (event) => {
         if (!(parseInt(event.target.value) < 1) || !(event.target.value !== '')) {
@@ -28,6 +29,13 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
             setInputValError('error')
         }
     }
+
+/*    useEffect(() => {
+        setSelect1(content.LScatID)
+        setSelect2(content.LSitemID)
+        setInputVal(content.LScount)
+        setItemPrice(content.LSsum)
+    },[content])*/
 
     //запрос к АПИ с параметром через Аполло
     const {loading, error, data, refetch} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
@@ -48,7 +56,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
 
     //функция обработчик первого селекта, делаем проверку есть ли товары из нужной категории в локальном хранилище, если нет, меняет стэйт setCurrentId
     const changeCat = (event) => {
-       let id = event.target.value
+        let id = event.target.value
         setSelect1(event.target.value)
         setIsSelLoading(true)
         setSelect2('0')
@@ -66,6 +74,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
         setSelect2(event.target.value)
         if (parseInt(event.target.value) !== 0 && parseInt(event.target.value) !== undefined) {
             calcRowPrice(parseInt(event.target.value))
+            //setBlock(false)
         }
     }
 
@@ -77,28 +86,27 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
         LScatID = select1
         LSsum = itemPrice
         LScount = inputVal
-        LSrowID = row
-        console.log('row',row)
+        LSrowID = props.id
         let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
-        if(filteredProductItem[0]){
+        if (filteredProductItem[0]) {
             LSitemName = filteredProductItem[0].name
             LStypeOfCount = filteredProductItem[0].metaData.filter(item => item.key === 'typecount')[0].value
         }
         let filteredCatsItem = cats.filter(item => item.productCategoryId === parseInt(select1))
-        if(filteredCatsItem[0]){
+        if (filteredCatsItem[0]) {
             LScatName = filteredCatsItem[0].name
         }
 
-        if(sessionStorage.getItem('order') !== null){
+        if (sessionStorage.getItem('order') !== null) {
             let dataLS = JSON.parse(sessionStorage.getItem('order'))
             data1 = {LSrowID, LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum}
-            if(dataLS) {
-               let newArr = dataLS.filter(item => item.LSrowID !== LSrowID)
+            if (dataLS) {
+                let newArr = dataLS.filter(item => item.LSrowID !== LSrowID)
                 newArr.push(data1)
                 sessionStorage.setItem('order', JSON.stringify(newArr))
             }
         } else {
-            if(LSsum>0) {
+            if (LSsum > 0) {
                 data1 = [{LSrowID, LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum}]
                 sessionStorage.setItem('order', JSON.stringify(data1))
             }
@@ -142,7 +150,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
     //запускаем функцию сохранения в ЛС при изменении стэйта зависимых полей
     useEffect(() => {
         SaveItemToLs()
-    },[inputVal,select2, itemPrice])
+    }, [inputVal, select2, itemPrice])
 
     //записываем в локальное хранилище и стэйт список всех категорий
     useEffect(() => {
@@ -174,7 +182,7 @@ const CalculatorRow = ({row, cats, count, deleteRow}) => {
         /**
          * @param {{productCategoryId:int}} cats
          */
-        if(cats[0].productCategoryId > 0) {
+        if (cats[0].productCategoryId > 0) {
             setCurrentId(cats[0].productCategoryId)
             setSelect1(cats[0].productCategoryId)
         }

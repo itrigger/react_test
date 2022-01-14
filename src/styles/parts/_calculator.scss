@@ -82,6 +82,9 @@
     pointer-events: none;
     opacity: 0.8;
   }
+  &>div:first-child .els-del{
+    display: none !important;
+  }
 }
 
 .els-header{

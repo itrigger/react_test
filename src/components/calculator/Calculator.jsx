@@ -12,23 +12,37 @@ const Calculator = () => {
     const alert = useAlert();
 
     const [cats, setCats] = useState([{}])
-    const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [])
+    const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [{id: 0,item: {LSrowID:0}}])
     const [rows, setRows] = useState([0])
     const {rowCountID, setRowCountID} = useContext(CalcContext)
+    const [block, setBlock] = useState(false)
 
     useEffect(() => {
         let arr = []
+        let arrSaved = []
         if (sessionStorage.getItem('order') !== null) {
             JSON.parse(sessionStorage.getItem('order')).map((item) => arr.push(item.LSrowID))
             setRows(arr)
-            setSavedRows(sessionStorage.getItem('order'))
-            console.log(savedRows)
+            JSON.parse(sessionStorage.getItem('order')).map(item => arrSaved.push(
+                {
+                    id: item.LSrowID,
+                    item
+                }
+            ))
+            setSavedRows(arrSaved)
         }
     },[])
 
     const addRow = () => {
-        setRowCountID(Math.max(...rows) + 1)
-        setRows([...rows, Math.max(...rows) + 1])
+        if(!block) {
+            let nextNumber = Math.max(...rows) + 1
+            console.log(nextNumber)
+            setRowCountID(nextNumber)
+            setRows([...rows, nextNumber])
+            let obj ={id: nextNumber, item:{LSrowID:nextNumber}}
+            setSavedRows([...savedRows, obj])
+           // setBlock(true)
+        }
     }
 
     const deleteRow = (row) => {
@@ -40,6 +54,7 @@ const Calculator = () => {
                 sessionStorage.setItem('order', JSON.stringify(newArr))
             }
         }
+        //setBlock(false)
     }
 
     const {loading, error, data} = useQuery(CATEGORIES_GET_ALL);
@@ -64,13 +79,14 @@ const Calculator = () => {
                 <div className="flex els-body flex-column">
                     {
                         loading ? <Loader/> :
-                            rows.map((row, index) =>
+                            savedRows.map((row, index) =>
                                 <Calculator_row
                                     cats={cats}
-                                    key={row}
+                                    key={row.id}
                                     deleteRow={deleteRow}
                                     count={1}
-                                    row={row}
+                                    setBlock={setBlock}
+                                    {...row}
                                 />
                             )
                     }
