@@ -12,7 +12,18 @@ const Calculator = () => {
     const alert = useAlert();
 
     const [cats, setCats] = useState([{}])
-    const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [{id: 0,item: {LSrowID:0}}])
+    const [savedRows, setSavedRows] = useState(JSON.parse(sessionStorage.getItem('order')) || [{
+        id: 0, item: {
+            LSrowID: 0,
+            LSitemID: 0,
+            LSitemName:0,
+            LScatID:0,
+            LScatName:0,
+            LScount:0,
+            LStypeOfCount:0,
+            LSsum:0
+        }
+    }])
     const [rows, setRows] = useState([0])
     const {rowCountID, setRowCountID} = useContext(CalcContext)
     const [block, setBlock] = useState(false)
@@ -30,17 +41,19 @@ const Calculator = () => {
                 }
             ))
             setSavedRows(arrSaved)
+            console.log(arr)
+            console.log(arrSaved)
         }
-    },[])
+    }, [])
 
     const addRow = () => {
-        if(!block) {
+        if (!block) {
             let nextNumber = Math.max(...rows) + 1
             setRowCountID(nextNumber)
             setRows([...rows, nextNumber])
-            let obj ={id: nextNumber, item:{LSrowID:nextNumber}}
+            let obj = {id: nextNumber, item: {LSrowID: nextNumber}}
             setSavedRows([...savedRows, obj])
-           // setBlock(true)
+            // setBlock(true)
         }
     }
 
@@ -84,7 +97,8 @@ const Calculator = () => {
                                     key={row.id}
                                     deleteRow={deleteRow}
                                     count={1}
-                                    setBlock={setBlock}
+                                    savedRows={savedRows}
+                                    setSavedRows={setSavedRows}
                                     {...row}
                                 />
                             )

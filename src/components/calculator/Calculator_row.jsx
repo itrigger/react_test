@@ -5,7 +5,7 @@ import {PRODUCTS_GET_BY_CATEGORY_ID} from "../../GraphQL/queries";
 import {useAlert} from "react-alert";
 import Loader from "../UI/loader/Loader";
 
-const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
+const CalculatorRow = ({row, cats, count, deleteRow, content, savedRows, setSavedRows, ...props}) => {
 
     const alert = useAlert(); //модуль алертов
 
@@ -18,6 +18,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
     const [itemPrice, setItemPrice] = useState(0) //состояние цены строки
     const [isSelLoading, setIsSelLoading] = useState(true) //состояние блокировки второго селекта
     const [currentId, setCurrentId] = useState('1') //айди выбранной категории в строке калькулятора
+    const [firstTime, setFirstTime] = useState(true)
 
 
     //обработчик поля ввода кол-ва товаров, также меняем стэйт Ошибки, если поле пусто или значение меньше 1
@@ -31,14 +32,14 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
     }
 
     useEffect(() => {
-        if(props.item.LScount > 0){
+        if (props.item && props.item.LScount) {
             setInputVal(props.item.LScount)
         }
-        setItemPrice(props.item.LSsum)
-   /*     if(props.item.LSitemID > 0){
-            calcRowPrice(props.item.LSitemID)
-        }*/
-    },[props.item])
+        if(props.item && props.item.LSsum){
+            setItemPrice(props.item.LSsum)
+            setFirstTime(false)
+        }
+    }, [props.item])
 
     //запрос к АПИ с параметром через Аполло
     const {loading, error, data, refetch} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
@@ -85,14 +86,26 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
     //Данные храним в локальном хранилище, чтобы при повторном открытии сайта они сохранялись и подгружались
     const SaveItemToLs = () => {
         let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data1
-        LSitemID = props.item.LSitemID ? props.item.LSitemID : select2
-        LScatID =  props.item.LScatID ? props.item.LScatID : select1
-        LSsum = props.item.LSsum ? props.item.LSsum : itemPrice
-        LScount = props.item.LScount ? props.item.LScount : inputVal
-        LSrowID = props.id
+        if(firstTime){
+            LSitemID = props.item && props.item.LSitemID ? props.item.LSitemID : select2
+            LScatID = props.item && props.item.LScatID ? props.item.LScatID : select1
+            LSsum = props.item && props.item.LSsum ? props.item.LSsum : itemPrice
+            LScount = props.item && props.item.LScount ? props.item.LScount : inputVal
+            LSrowID = props.id
+        } else {
+            LSitemID = select2
+            LScatID = select1
+            LSsum = itemPrice
+            LScount = inputVal
+            LSrowID = props.id
+        }
         let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
         if (filteredProductItem[0]) {
-            LSitemName = filteredProductItem[0].name
+            if(firstTime) {
+                LSitemName = props.item && props.item.LSitemName ? props.item.LSitemName : filteredProductItem[0].name
+            } else {
+                LSitemName = filteredProductItem[0].name
+            }
             LStypeOfCount = filteredProductItem[0].metaData.filter(item => item.key === 'typecount')[0].value
         }
         let filteredCatsItem = cats.filter(item => item.productCategoryId === parseInt(select1))
@@ -165,8 +178,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
              */
             setProductItem(data.products.nodes)
             setIsSelLoading(false)
-            console.log(props.item.LSitemID)
-            if (props.item.LSitemID > 0) {
+            if (props.item && props.item.LSitemID > 0) {
                 setSelect2(props.item.LSitemID)
             }
             sessionStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
@@ -180,7 +192,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
                 categoryId: parseInt(currentId)
             }
         )
-        if(!loading) {
+        if (!loading) {
 
         }
     }, [currentId])
@@ -193,7 +205,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
          * @param {{productCategoryId:int}} cats
          */
         if (cats[0].productCategoryId > 0) {
-            if(props.item.LScatID>0){
+            if (props.item.LScatID > 0) {
                 setSelect1(props.item.LScatID)
                 setCurrentId(props.item.LScatID)
             } else {
