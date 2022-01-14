@@ -30,12 +30,15 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
         }
     }
 
-/*    useEffect(() => {
-        setSelect1(content.LScatID)
-        setSelect2(content.LSitemID)
-        setInputVal(content.LScount)
-        setItemPrice(content.LSsum)
-    },[content])*/
+    useEffect(() => {
+        if(props.item.LScount > 0){
+            setInputVal(props.item.LScount)
+        }
+        setItemPrice(props.item.LSsum)
+   /*     if(props.item.LSitemID > 0){
+            calcRowPrice(props.item.LSitemID)
+        }*/
+    },[props.item])
 
     //запрос к АПИ с параметром через Аполло
     const {loading, error, data, refetch} = useQuery(PRODUCTS_GET_BY_CATEGORY_ID, {
@@ -149,7 +152,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
 
     //запускаем функцию сохранения в ЛС при изменении стэйта зависимых полей
     useEffect(() => {
-        SaveItemToLs()
+       // SaveItemToLs()
     }, [inputVal, select2, itemPrice])
 
     //записываем в локальное хранилище и стэйт список всех категорий
@@ -162,6 +165,10 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
              */
             setProductItem(data.products.nodes)
             setIsSelLoading(false)
+            console.log(props.item.LSitemID)
+            if (props.item.LSitemID > 0) {
+                setSelect2(props.item.LSitemID)
+            }
             sessionStorage.setItem(`categories${currentId}`, JSON.stringify(data.products.nodes))
         }
     }, [data])
@@ -173,6 +180,9 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
                 categoryId: parseInt(currentId)
             }
         )
+        if(!loading) {
+
+        }
     }, [currentId])
 
     //список категорий получаем в компоненте выше асинхронно, а тут обновляем первый селект при получении данных
@@ -183,8 +193,13 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
          * @param {{productCategoryId:int}} cats
          */
         if (cats[0].productCategoryId > 0) {
-            setCurrentId(cats[0].productCategoryId)
-            setSelect1(cats[0].productCategoryId)
+            if(props.item.LScatID>0){
+                setSelect1(props.item.LScatID)
+                setCurrentId(props.item.LScatID)
+            } else {
+                setCurrentId(cats[0].productCategoryId)
+                setSelect1(cats[0].productCategoryId)
+            }
         }
     }, [cats])
 

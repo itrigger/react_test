@@ -36,7 +36,6 @@ const Calculator = () => {
     const addRow = () => {
         if(!block) {
             let nextNumber = Math.max(...rows) + 1
-            console.log(nextNumber)
             setRowCountID(nextNumber)
             setRows([...rows, nextNumber])
             let obj ={id: nextNumber, item:{LSrowID:nextNumber}}
@@ -71,7 +70,6 @@ const Calculator = () => {
         }
     }, [data])
 
-    console.log(rows)
     return (
         <div>
             <div className="calculator gray-radio-bg" id="main-page--calculator">
