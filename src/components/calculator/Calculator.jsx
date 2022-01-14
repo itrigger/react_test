@@ -46,6 +46,7 @@ const Calculator = () => {
 
     const deleteRow = (row) => {
         setRows(rows.filter(p => p !== row))
+        setSavedRows(savedRows.filter(p => p.id !== row))
         if (sessionStorage.getItem('order') !== null) {
             let dataLS = JSON.parse(sessionStorage.getItem('order'))
             if (dataLS) {

@@ -85,10 +85,10 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
     //Данные храним в локальном хранилище, чтобы при повторном открытии сайта они сохранялись и подгружались
     const SaveItemToLs = () => {
         let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data1
-        LSitemID = select2
-        LScatID = select1
-        LSsum = itemPrice
-        LScount = inputVal
+        LSitemID = props.item.LSitemID ? props.item.LSitemID : select2
+        LScatID =  props.item.LScatID ? props.item.LScatID : select1
+        LSsum = props.item.LSsum ? props.item.LSsum : itemPrice
+        LScount = props.item.LScount ? props.item.LScount : inputVal
         LSrowID = props.id
         let filteredProductItem = productItem.filter(item => item.databaseId === parseInt(select2))
         if (filteredProductItem[0]) {
@@ -152,7 +152,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
 
     //запускаем функцию сохранения в ЛС при изменении стэйта зависимых полей
     useEffect(() => {
-       // SaveItemToLs()
+        SaveItemToLs()
     }, [inputVal, select2, itemPrice])
 
     //записываем в локальное хранилище и стэйт список всех категорий
@@ -215,7 +215,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, ...props}) => {
         <div>
             {loading && <Loader/>}
             <div className="els-row els-row-1">
-                <div className="els-del" onClick={() => deleteRow(row)}>×</div>
+                <div className="els-del" onClick={() => deleteRow(props.id)}>×</div>
                 <div className="el-wrap">{row}
                     <select className="el-type el-type-1" name="el-type" value={select1}
                             onChange={changeCat}>
