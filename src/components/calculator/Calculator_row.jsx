@@ -88,7 +88,7 @@ const CalculatorRow = ({row, cats, count, deleteRow, content, savedRows, setSave
         let LSitemID, LSitemName, LScatID, LScatName, LScount, LStypeOfCount, LSsum, LSrowID, data1
         if(firstTime){
             LSitemID = props.item && props.item.LSitemID ? props.item.LSitemID : select2
-            LScatID = props.item && props.item.LScatID ? props.item.LScatID : select1
+            LScatID = props.item && props.item.LScatID && parseInt(props.item.LScatID) > 1 ? props.item.LScatID : select1
             LSsum = props.item && props.item.LSsum ? props.item.LSsum : itemPrice
             LScount = props.item && props.item.LScount ? props.item.LScount : inputVal
             LSrowID = props.id

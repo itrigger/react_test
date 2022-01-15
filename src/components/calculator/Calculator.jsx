@@ -16,17 +16,17 @@ const Calculator = () => {
         id: 0, item: {
             LSrowID: 0,
             LSitemID: 0,
-            LSitemName:0,
-            LScatID:0,
-            LScatName:0,
-            LScount:0,
-            LStypeOfCount:0,
-            LSsum:0
+            LSitemName: 0,
+            LScatID: 1,
+            LScatName: 0,
+            LScount: 0,
+            LStypeOfCount: 0,
+            LSsum: 0
         }
     }])
     const [rows, setRows] = useState([0])
     const {rowCountID, setRowCountID} = useContext(CalcContext)
-    const [block, setBlock] = useState(false)
+    const [block, setBlock] = useState(true)
 
     useEffect(() => {
         let arr = []
@@ -44,17 +44,15 @@ const Calculator = () => {
             console.log(arr)
             console.log(arrSaved)
         }
+        setBlock(false)
     }, [])
 
     const addRow = () => {
-        if (!block) {
-            let nextNumber = Math.max(...rows) + 1
-            setRowCountID(nextNumber)
-            setRows([...rows, nextNumber])
-            let obj = {id: nextNumber, item: {LSrowID: nextNumber}}
-            setSavedRows([...savedRows, obj])
-            // setBlock(true)
-        }
+        let nextNumber = Math.max(...rows) + 1
+        setRowCountID(nextNumber)
+        setRows([...rows, nextNumber])
+        let obj = {id: nextNumber, item: {LSrowID: nextNumber}}
+        setSavedRows([...savedRows, obj])
     }
 
     const deleteRow = (row) => {
@@ -91,8 +89,10 @@ const Calculator = () => {
                 <div className="flex els-body flex-column">
                     {
                         loading ? <Loader/> :
-                            savedRows.map((row, index) =>
-                                <Calculator_row
+                            savedRows.map(function (row, index) {
+                                console.log(row)
+                                if(row.id !== undefined && row.item.LScatID !==0){
+                                return <Calculator_row
                                     cats={cats}
                                     key={row.id}
                                     deleteRow={deleteRow}
@@ -100,7 +100,10 @@ const Calculator = () => {
                                     savedRows={savedRows}
                                     setSavedRows={setSavedRows}
                                     {...row}
-                                />
+                                />} else {
+                                    return false
+                                }
+                                }
                             )
                     }
                 </div>
